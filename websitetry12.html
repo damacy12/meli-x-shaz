@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shaz & Meli's Space</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fce4ec;
+            color: #4a4a4a;
+        }
+        .container {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .section {
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .hidden {
+            display: none;
+        }
+        .input-group, textarea, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #ff80ab;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #ff4081;
+        }
+        .toggle-button {
+            margin-top: 10px;
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 10px;
+            background-color: #ffb2e6;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .toggle-button:hover {
+            background-color: #ff77a9;
+        }
+        .toggle-button .emoji {
+            margin-right: 10px;
+            font-size: 1.5em;
+        }
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .gallery img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        .playlist-section {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8bbd0;
+            border-radius: 8px;
+        }
+        .playlist-section.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="loginSection">
+            <h2>Login</h2>
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username">
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password">
+            </div>
+            <button onclick="login()">Login</button>
+            <div class="error hidden" id="errorMessage">Invalid username or password</div>
+        </div>
+
+        <div id="contentSection" class="hidden">
+            <h1>Welcome, <span id="user"></span>! 🌸</h1>
+
+            <!-- Photo Gallery -->
+            <div class="section">
+                <h2>Photo Gallery 📸</h2>
+                <div class="gallery" id="gallery">
+                    <!-- Images will be dynamically added here -->
+                </div>
+                <input type="file" id="imageInput">
+                <button onclick="addImage()">Add Image</button>
+                <button onclick="removeImage()">Remove Last Image</button>
+            </div>
+
+            <!-- Love Notes -->
+            <div class="section">
+                <button class="toggle-button" onclick="toggleSection('loveNotesSection')">💌 Love Notes</button>
+                <div id="loveNotesSection" class="hidden">
+                    <div id="loveNotes" class="love-notes"></div>
+                    <textarea id="newLoveNote" placeholder="Write a new love note..."></textarea>
+                    <button onclick="addLoveNote()">Add Love Note</button>
+                </div>
+            </div>
+
+            <!-- Bucket List -->
+            <div class="section">
+                <button class="toggle-button" onclick="toggleSection('bucketListSection')">📝 Bucket List</button>
+                <div id="bucketListSection" class="hidden">
+                    <ul id="bucketList">
+                        <li class="bucket-list-item"><input type="checkbox"> Visit Paris</li>
+                        <li class="bucket-list-item"><input type="checkbox"> Go skydiving</li>
+                        <li class="bucket-list-item"><input type="checkbox"> Learn to dance</li>
+                        <!-- Add more items as needed -->
+                    </ul>
+                    <input type="text" id="newBucketItem" placeholder="Add a new item...">
+                    <button onclick="addBucketItem()">Add</button>
+                </div>
+            </div>
+
+            <!-- Favorite Memories -->
+            <div class="section">
+                <button class="toggle-button" onclick="toggleSection('memoriesSection')">📸 Favorite Memories</button>
+                <div id="memoriesSection" class="hidden">
+                    <div id="memories">
+                        <p>2023-06-15: Our first date at the beach.</p>
+                        <p>2023-12-25: Our first Christmas together.</p>
+                        <!-- Add more memories as needed -->
+                    </div>
+                    <textarea id="newMemory" placeholder="Add a new memory..."></textarea>
+                    <button onclick="addMemory()">Add Memory</button>
+                </div>
+            </div>
+
+            <!-- Playlists -->
+            <div class="section">
+                <button class="toggle-button" onclick="toggleSection('playlistsSection')">🎵 Playlists</button>
+                <div id="playlistsSection" class="hidden">
+                    <div id="playlists">
+                        <!-- Playlists will be dynamically added here -->
+                    </div>
+                    <textarea id="newPlaylist" placeholder="Paste your Spotify playlist embed code..."></textarea>
+                    <button onclick="addPlaylist()">Add Playlist</button>
+                </div>
+            </div>
+
+            <!-- Private Journal -->
+            <div class="section">
+                <button class="toggle-button" onclick="toggleSection('journalSection')">📔 Private Journal</button>
+                <div id="journalSection" class="hidden">
+                    <div id="journal" class="journal">
+                        <p><strong>Shaz:</strong> Today we had an amazing time at the park. I love how we can be ourselves around each other.</p>
+                        <p><strong>Meli:</strong> I felt so happy today spending time with you. Every moment is precious.</p>
+                        <!-- Add more journal entries as needed -->
+                    </div>
+                    <textarea id="newJournalEntry" placeholder="Write a new journal entry..."></textarea>
+                    <button onclick="addJournalEntry()">Add Journal Entry</button>
+                </div>
+            </div>
+
+            <!-- Recipes -->
+            <div class="section">
+                <button class="toggle-button" onclick="toggleSection('recipesSection')">🍲 Recipes</button>
+                <div id="recipesSection" class="hidden">
+                    <div id="recipes" class="recipes">
+                        <p><strong>Spaghetti Bolognese</strong></p>
+                        <p>Ingredients: ...</p>
+                        <p>Instructions: ...</p>
+                        <!-- Add more recipes as needed -->
+                    </div>
+                    <textarea id="newRecipe" placeholder="Add a new recipe..."></textarea>
+                    <button onclick="addRecipe()">Add Recipe</button>
+                </div>
+            </div>
+
+            <!-- Dream Board -->
+            <div class="section">
+                <button class="toggle-button" onclick="toggleSection('dreamBoardSection')">🌈 Dream Board</button>
+                <div id="dreamBoardSection" class="hidden">
+                    <div id="dreamBoard" class="dream-board">
+                        <p><img src="dream1.jpg" alt="Dream 1" width="100"></p>
+                        <p><img src="dream2.jpg" alt="Dream 2" width="100"></p>
+                        <!-- Add more dream images as needed -->
+                    </div>
+                    <textarea id="newDream" placeholder="Add a new dream..."></textarea>
+                    <button onclick="addDream()">Add Dream</button>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div class="section">
+                <button class="toggle-button" onclick="toggleSection('messagesSection')">💬 Messages</button>
+                <div id="messagesSection" class="hidden">
+                    <div id="messages" class="messages">
+                        <p><strong>Shaz:</strong> Good morning, love!</p>
+                        <p><strong>Meli:</strong> Hi dear! How was your day?</p>
+                        <!-- Add more messages as needed -->
+                    </div>
+                    <textarea id="newMessage" placeholder="Leave a message..."></textarea>
+                    <button onclick="addMessage()">Send Message</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Define users with their passwords
+        const users = {
+            "melinda": { password: "melinda", displayName: "my Meli baby" },
+            "shazaan": { password: "shazaan", displayName: "Shaz" }
+        };
+
+        // Login Functionality
+        function login() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            // Check if username and password match
+            if (username in users && users[username].password === password) {
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('contentSection').classList.remove('hidden');
+                document.getElementById('user').innerText = users[username].displayName;
+            } else {
+                document.getElementById('errorMessage').classList.remove('hidden');
+            }
+        }
+
+        // Add Image to Gallery
+        function addImage() {
+            const fileInput = document.getElementById('imageInput');
+            const files = fileInput.files;
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+
+                reader.onload = function(event) {
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    img.alt = 'Gallery Image';
+                    document.getElementById('gallery').appendChild(img);
+                }
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Remove Image from Gallery
+        function removeImage() {
+            const gallery = document.getElementById('gallery');
+            if (gallery.lastElementChild) {
+                gallery.removeChild(gallery.lastElementChild);
+            }
+        }
+
+        // Toggle Section Visibility
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.classList.toggle('hidden');
+        }
+
+        // Add Love Note
+        function addLoveNote() {
+            const username = document.getElementById('user').innerText;
+            const newLoveNote = document.getElementById('newLoveNote').value.trim();
+            if (newLoveNote) {
+                const note = document.createElement('p');
+                note.innerHTML = `<strong>${username}:</strong> ${newLoveNote}`;
+                document.getElementById('loveNotes').appendChild(note);
+                document.getElementById('newLoveNote').value = '';
+            }
+        }
+
+        // Add Bucket List Item
+        function addBucketItem() {
+            const username = document.getElementById('user').innerText;
+            const newBucketItem = document.getElementById('newBucketItem').value.trim();
+            if (newBucketItem) {
+                const item = document.createElement('li');
+                item.classList.add('bucket-list-item');
+                item.innerHTML = `<input type="checkbox"> ${newBucketItem} (added by ${username})`;
+                document.getElementById('bucketList').appendChild(item);
+                document.getElementById('newBucketItem').value = '';
+            }
+        }
+
+        // Add Memory
+        function addMemory() {
+            const username = document.getElementById('user').innerText;
+            const newMemory = document.getElementById('newMemory').value.trim();
+            if (newMemory) {
+                const memory = document.createElement('p');
+                memory.innerHTML = `${new Date().toLocaleDateString()}: ${newMemory} (added by ${username})`;
+                document.getElementById('memories').appendChild(memory);
+                document.getElementById('newMemory').value = '';
+            }
+        }
+
+        // Add Playlist
+        function addPlaylist() {
+            const username = document.getElementById('user').innerText;
+            const newPlaylistCode = document.getElementById('newPlaylist').value.trim();
+            if (newPlaylistCode) {
+                const playlistSection = document.createElement('div');
+                playlistSection.classList.add('playlist-section');
+                const playlistName = prompt("Enter the name for this playlist:");
+                playlistSection.innerHTML = `
+                    <button class="toggle-button" onclick="toggleSection('${playlistName}')">
+                        🎵 ${playlistName}
+                    </button>
+                    <div id="${playlistName}" class="hidden">
+                        <iframe style="border-radius:12px" src="${newPlaylistCode}" width="100%" height="352" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                    </div>
+                `;
+                document.getElementById('playlists').appendChild(playlistSection);
+                document.getElementById('newPlaylist').value = '';
+            }
+        }
+
+        // Add Journal Entry
+        function addJournalEntry() {
+            const username = document.getElementById('user').innerText;
+            const newJournalEntry = document.getElementById('newJournalEntry').value.trim();
+            if (newJournalEntry) {
+                const entry = document.createElement('p');
+                entry.innerHTML = `<strong>${username}:</strong> ${newJournalEntry}`;
+                document.getElementById('journal').appendChild(entry);
+                document.getElementById('newJournalEntry').value = '';
+            }
+        }
+
+        // Add Recipe
+        function addRecipe() {
+            const newRecipe = document.getElementById('newRecipe').value.trim();
+            if (newRecipe) {
+                const recipe = document.createElement('p');
+                recipe.innerHTML = newRecipe;
+                document.getElementById('recipes').appendChild(recipe);
+                document.getElementById('newRecipe').value = '';
+            }
+        }
+
+        // Add Dream
+        function addDream() {
+            const newDream = document.getElementById('newDream').value.trim();
+            if (newDream) {
+                const dream = document.createElement('p');
+                dream.innerHTML = newDream;
+                document.getElementById('dreamBoard').appendChild(dream);
+                document.getElementById('newDream').value = '';
+            }
+        }
+
+        // Add Message
+        function addMessage() {
+            const username = document.getElementById('user').innerText;
+            const newMessage = document.getElementById('newMessage').value.trim();
+            if (newMessage) {
+                const message = document.createElement('p');
+                message.innerHTML = `<strong>${username}:</strong> ${newMessage}`;
+                document.getElementById('messages').appendChild(message);
+                document.getElementById('newMessage').value = '';
+            }
+        }
+    </script>
+</body>
+</html>
